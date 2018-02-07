@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 var argv = require( 'argv' );
 var args = process.argv.slice(2);
+const moment = require('moment');
 
 app.set('view engine', 'ejs');
 
-const db = require("./database");
+const db = require("./search-using-knex");
 
 db.getFamousPeople(args, (rows) => {
   let count = rows.length;
@@ -13,11 +14,12 @@ db.getFamousPeople(args, (rows) => {
 
   for (const key in rows) {
     let rowNum = Number(key) + 1;
-    let year = rows[key].bday.getFullYear();
-    let month = (rows[key].bday.getMonth() + 1);
-    let day = rows[key].bday.getDate();
-    let stringDate =  year + '-' + month + '-' + day;
-    // console.log('month.length: ', typeof month);
+    let date = moment(rows[key].birthdate).format("YYYY-MM-DD");   
+    // let year = rows[key].birthdate.getFullYear();
+    // let month = (rows[key].birthdate.getMonth() + 1);
+    // let day = rows[key].birthdate.getDate();
+    // let stringDate =  year + '-' + month + '-' + day;
+    // // console.log('month.length: ', typeof month);
     // if (month > 10) {
     //   month = '0' + month;
     // }
@@ -25,10 +27,9 @@ db.getFamousPeople(args, (rows) => {
     //   day = '0' + day;
     // }
 
-    console.log(`-${rowNum}: ${rows[key].first_name} ${rows[key].last_name}, born ${stringDate}`)
+    console.log(`-${rowNum}: ${rows[key].first_name} ${rows[key].last_name}, born ${date}`)
   }
-//   Found 1 person(s) by the name 'Lincoln':
-// - 1: Abraham Lincoln, born '1809-02-12'
+  process.exit();
 });
 
 app.listen(3000);
