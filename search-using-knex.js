@@ -21,7 +21,20 @@ function getFamousPeople(searchTerm, callback) {
   });
 }
 
+function insertFamousPeople(firstName, lastName, dob, callback) {
+  knex('famous_people')
+  .insert({first_name: `${firstName}`,
+           last_name: `${lastName}`,
+           birthdate: `${dob}` 
+  })
+  .asCallback(function(err, result) {
+      if (err) return console.error(err);
+      callback(result);
+  });
+}
+
 exports.getFamousPeople = getFamousPeople;
+exports.insertFamousPeople = insertFamousPeople;
 
 
 
